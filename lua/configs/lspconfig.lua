@@ -1,6 +1,31 @@
-require("nvchad.configs.lspconfig").defaults()
+local servers = {
+  html = {},
+  cssls = {},
+  gopls = {
+    settings = {
+      gopls = {
+        gofumpt = true,
+        experimentalPostfixCompletions = true,
+        goVersion = "", -- allow newer Go versions
+        analyses = { unusedparams = true, shadow = true },
+        staticcheck = true,
+      },
+    },
+  },
+  rust_analyzer = {},
+  vtsls = {},
+  ["typescript-language-server"] = {},
+}
 
-local servers = { "html", "cssls" }
-vim.lsp.enable(servers)
+for name, opts in pairs(servers) do
+  vim.lsp.config(name, opts)
+  vim.lsp.enable(name)
+end
 
--- read :h vim.lsp.config for changing options of lsp servers 
+vim.diagnostic.config {
+  virtual_text = true,
+  signs = true,
+  update_in_insert = false,
+}
+
+-- read :h vim.lsp.config for changing options of lsp servers
