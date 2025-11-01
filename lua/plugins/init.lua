@@ -1,7 +1,20 @@
+require("conform").setup {
+  format_on_save = {
+    lsp_fallback = true,
+    timeout_ms = 500,
+  },
+  formatters_by_ft = {
+    javascript = { "prettier" },
+    typescript = { "prettier" },
+    go = { "goimports" },
+    rust = { "rustfmt" },
+  },
+}
+
 return {
   {
     "stevearc/conform.nvim",
-    -- event = 'BufWritePre', -- uncomment for format on save
+    event = "BufWritePre", -- uncomment for format on save
     opts = require "configs.conform",
   },
 
