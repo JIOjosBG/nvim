@@ -6,7 +6,7 @@ return {
       format_on_save = function(bufnr)
         return {
           lsp_fallback = true,
-          timeout_ms = 500,
+          timeout_ms = 2000,
         }
       end,
       formatters_by_ft = {
@@ -14,6 +14,18 @@ return {
         typescript = { "prettier" },
         go = { "goimports" },
         rust = { "rustfmt" },
+        solidity = { "prettier_solidity" },
+      },
+      formatters = {
+        prettier_solidity = {
+          command = "prettier",
+          args = {
+            "--plugin=prettier-plugin-solidity",
+            "--stdin-filepath",
+            "$FILENAME",
+          },
+          stdin = true,
+        },
       },
     },
   },
