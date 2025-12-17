@@ -28,4 +28,7 @@ vim.diagnostic.config {
   update_in_insert = false,
 }
 
+require("lualine").setup {
+  options = { icons_enabled = true },
+}
 -- read :h vim.lsp.config for changing options of lsp servers
