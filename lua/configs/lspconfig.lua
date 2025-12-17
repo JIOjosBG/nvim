@@ -28,6 +28,27 @@ vim.diagnostic.config {
   update_in_insert = false,
 }
 
+vim.fn.sign_define("DiagnosticSignError", { text = "✘" })
+vim.fn.sign_define("DiagnosticSignWarn", { text = "▲" })
+vim.fn.sign_define("DiagnosticSignInfo", { text = "ℹ" })
+vim.fn.sign_define("DiagnosticSignHint", { text = "➤" })
+
+vim.opt.list = true
+vim.opt.listchars = {
+  tab = "▸ ",
+  trail = "·",
+  nbsp = "␣",
+}
+require("gitsigns").setup {
+  signs = {
+    add = { text = "+" },
+    change = { text = "~" },
+    delete = { text = "_" },
+    topdelete = { text = "‾" },
+    changedelete = { text = "~" },
+  },
+}
+
 require("lualine").setup {
   options = { icons_enabled = true },
 }
