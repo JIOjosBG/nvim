@@ -35,6 +35,8 @@ dofile(vim.g.base46_cache .. "statusline")
 require "options"
 require "autocmds"
 
+vim.opt.scrolloff = 17
+
 vim.schedule(function()
   require "mappings"
 end)
