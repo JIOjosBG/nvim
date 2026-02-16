@@ -36,6 +36,8 @@ require "options"
 require "autocmds"
 
 vim.opt.scrolloff = 17
+vim.opt.spell = true
+vim.opt.spelllang = { "en_us" }
 
 vim.schedule(function()
   require "mappings"
