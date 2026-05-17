@@ -25,6 +25,9 @@ require("lazy").setup("plugins")
 
 
 vim.opt.clipboard = "unnamedplus"
+vim.opt.spelllang = "en_us"
+vim.opt.spell = true
+
 require('keymaps')
 require('diagnostic')
 require('lsp')
