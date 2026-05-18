@@ -35,6 +35,9 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHo
 	end,
 })
 
+vim.opt.number = true
+vim.opt.relativenumber = true
+
 vim.opt.spelllang = "en_us"
 vim.opt.spell = true
 vim.opt.spelloptions = "camel"
