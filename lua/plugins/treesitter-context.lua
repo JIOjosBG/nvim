@@ -8,7 +8,7 @@ return {
 				"javascript", "typescript", "tsx",
 				"python", "rust", "go",
 				"json", "yaml", "toml",
-				"html", "css",
+				"html", "css", "scss",
 				"bash", "markdown",
 			},
 			auto_install = true,

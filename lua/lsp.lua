@@ -36,9 +36,19 @@ vim.lsp.config("eslint", {
 	end,
 })
 
--- Enable both
+vim.lsp.config("cssls", {
+	cmd = { "vscode-css-language-server", "--stdio" },
+	filetypes = { "css", "scss", "less" },
+	root_markers = { "package.json", ".git" },
+	settings = {
+		css = { validate = true },
+		scss = { validate = true },
+		less = { validate = true },
+	},
+})
+
 vim.lsp.enable("vtsls")
 vim.lsp.enable("eslint")
-
+vim.lsp.enable("cssls")
 vim.lsp.enable("lua_ls")
 vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })

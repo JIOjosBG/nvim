@@ -11,6 +11,7 @@ return {
 				"lua_ls",
 				"vtsls",
 				"eslint",
+				"cssls",
 			},
 		},
 	},
