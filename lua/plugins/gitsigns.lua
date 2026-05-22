@@ -98,7 +98,7 @@ return {
 			current_line_blame_formatter = function(name, info, _)
 				local date = os.date("%Y-%m-%d", info.author_time)
 				local summary = info.summary or ""
-				return { { ("  %s, %s · %s"):format(name, date, summary), blame_hl(os.time() - info.author_time) } }
+				return { { ("  %s, %s · %s"):format(info.author, date, summary), blame_hl(os.time() - info.author_time) } }
 			end,
 			current_line_blame_formatter_nc = function(_, _)
 				return { { "  Not committed yet", "GitBlameOld" } }
