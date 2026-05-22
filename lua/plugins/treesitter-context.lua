@@ -5,6 +5,7 @@ return {
 		opts = {
 			ensure_installed = {
 				"lua", "vim", "vimdoc",
+				"c", "cpp",
 				"javascript", "typescript", "tsx",
 				"python", "rust", "go",
 				"json", "yaml", "toml",
@@ -12,6 +13,7 @@ return {
 				"bash", "markdown",
 			},
 			auto_install = true,
+			highlight = { enable = true },
 		},
 		config = function(_, opts)
 			require("nvim-treesitter.configs").setup(opts)

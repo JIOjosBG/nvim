@@ -12,6 +12,7 @@ return {
 				"vtsls",
 				"eslint",
 				"cssls",
+				"clangd",
 			},
 		},
 	},
