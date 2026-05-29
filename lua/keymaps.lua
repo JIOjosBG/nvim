@@ -1,6 +1,10 @@
 vim.keymap.set("x", "p", [["_dP]])
 vim.keymap.set("x", "P", [["_dP]])
 
+vim.keymap.set({ "n", "x" }, "d", '"_d')
+vim.keymap.set({ "n", "x" }, "D", '"_D')
+vim.keymap.set({ "n", "x" }, "x", '"_x')
+
 vim.keymap.set("n", "<C-h>", "<C-w>h")
 vim.keymap.set("n", "<C-j>", "<C-w>j")
 vim.keymap.set("n", "<C-k>", "<C-w>k")
