@@ -47,6 +47,31 @@ vim.lsp.config("cssls", {
 	},
 })
 
+vim.lsp.config("dartls", {
+	cmd = { "dart", "language-server", "--protocol=lsp" },
+	filetypes = { "dart" },
+	root_markers = { "pubspec.yaml", ".git" },
+	settings = {
+		dart = {
+			completeFunctionCalls = true,
+			showTodos = true,
+		},
+	},
+})
+
+vim.lsp.config("clangd", {
+	cmd = {
+		"clangd",
+		"--background-index",
+		"--clang-tidy",
+		"--query-driver=/usr/bin/g++,/usr/bin/gcc,/usr/bin/clang,/usr/bin/clang++",
+	},
+	filetypes = { "c", "cpp", "objc", "objcpp" },
+	root_markers = { "compile_commands.json", "compile_flags.txt", ".git" },
+})
+
+vim.lsp.enable("clangd")
+vim.lsp.enable("dartls")
 vim.lsp.enable("vtsls")
 vim.lsp.enable("eslint")
 vim.lsp.enable("cssls")

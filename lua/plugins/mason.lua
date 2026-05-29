@@ -13,6 +13,18 @@ return {
 				"eslint",
 				"cssls",
 				"clangd",
+				"dartls",
+			},
+		},
+	},
+	{
+		"WhoIsSethDaniel/mason-tool-installer.nvim",
+		dependencies = { "williamboman/mason.nvim" },
+		opts = {
+			ensure_installed = {
+				"prettier",
+				"stylua",
+				"eslint_d",
 			},
 		},
 	},
