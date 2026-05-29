@@ -6,7 +6,15 @@ return {
 	keys = {
 		{ "<Tab>", "<cmd>BufferLineCycleNext<cr>", desc = "Next buffer" },
 		{ "<S-Tab>", "<cmd>BufferLineCyclePrev<cr>", desc = "Prev buffer" },
-		{ "<leader>x", "<cmd>bdelete<cr>", desc = "Close buffer" },
+		{
+			"<leader>x",
+			function()
+				local buf = vim.api.nvim_get_current_buf()
+				vim.cmd("BufferLineCycleNext")
+				vim.api.nvim_buf_delete(buf, { force = false })
+			end,
+			desc = "Close buffer",
+		},
 	},
 	opts = {
 		options = {
