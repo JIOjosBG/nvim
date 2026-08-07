@@ -3,11 +3,23 @@ return {
 	version = false,
 	config = function()
 		local map = require("mini.map")
+
+		-- Distinct, harsher red for errors so they don't blend with GitSignsDelete
+		local function set_error_hl()
+			vim.api.nvim_set_hl(0, "MiniMapDiagnosticError", { fg = "#FF1F1F", bold = true })
+		end
+		set_error_hl()
+		vim.api.nvim_create_autocmd("ColorScheme", {
+			group = vim.api.nvim_create_augroup("MiniMapCustomHl", {}),
+			callback = set_error_hl,
+			desc = "Keep minimap error color after colorscheme change",
+		})
+
 		map.setup({
 			integrations = {
 				map.gen_integration.builtin_search(),
-				map.gen_integration.diff(),
-				map.gen_integration.diagnostic(),
+				map.gen_integration.gitsigns(),
+				map.gen_integration.diagnostic({ error = "MiniMapDiagnosticError" }),
 			},
 			symbols = {
 				encode = map.gen_encode_symbols.dot("4x2"),
