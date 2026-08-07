@@ -20,6 +20,20 @@ vim.keymap.set("n", "<leader>sp", function()
 	vim.opt_local.spell = not vim.opt_local.spell:get()
 end, { desc = "Toggle spell check" })
 
+vim.keymap.set("n", "<leader>t", function()
+	local file = vim.api.nvim_buf_get_name(0)
+	if file == "" then
+		vim.notify("No file in this buffer", vim.log.levels.WARN)
+		return
+	end
+
+	local root = vim.fs.root(0, { ".git" }) or vim.fn.getcwd()
+	local path = vim.fs.relpath(root, file) or file
+
+	vim.fn.setreg("+", path)
+	vim.notify("Copied " .. path)
+end, { desc = "Copy file path relative to project root" })
+
 -- fix nearest spelling error and return to position
 -- vim.keymap.set("n", "<leader>sf", "ms[s1z=`s", { desc = "Fix nearest spelling error" })
 
