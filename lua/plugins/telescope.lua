@@ -32,6 +32,27 @@ local function all_files()
   return vim.fn.systemlist(cmd)
 end
 
+-- Wrap an entry_maker so files with uncommitted changes get a "● " prefix.
+local function boosting_entry_maker(make, changed)
+  return function(line)
+    local entry = make(line)
+    if entry and changed[entry.filename] then
+      local display = entry.display
+      entry.display = function(e)
+        local text, highlights = display(e)
+        local prefix = "● "
+        local shift = #prefix
+        for _, hl in ipairs(highlights or {}) do
+          hl[1][1] = hl[1][1] + shift
+          hl[1][2] = hl[1][2] + shift
+        end
+        return prefix .. text, highlights
+      end
+    end
+    return entry
+  end
+end
+
 -- Wrap the default file sorter so changed files keep winning while typing.
 local function boosting_sorter(changed)
   local sorter = require("telescope.config").values.file_sorter({})
@@ -66,30 +87,14 @@ local function find_files()
     end
   end
 
-  local entry_maker = make_entry.gen_from_file({})
+  local entry_maker = boosting_entry_maker(make_entry.gen_from_file({}), changed)
 
   pickers
     .new({}, {
       prompt_title = "Find Files",
       finder = finders.new_table({
         results = results,
-        entry_maker = function(line)
-          local entry = entry_maker(line)
-          if entry and changed[line] then
-            local display = entry.display
-            entry.display = function(e)
-              local text, highlights = display(e)
-              local prefix = "● "
-              local shift = #prefix
-              for _, hl in ipairs(highlights or {}) do
-                hl[1][1] = hl[1][1] + shift
-                hl[1][2] = hl[1][2] + shift
-              end
-              return prefix .. text, highlights
-            end
-          end
-          return entry
-        end,
+        entry_maker = entry_maker,
       }),
       sorter = boosting_sorter(changed),
       previewer = require("telescope.config").values.file_previewer({}),
@@ -128,8 +133,19 @@ return {
     {
       "<leader>fs",
       function()
+        local make_entry = require("telescope.make_entry")
+        local conf = require("telescope.config").values
+
+        local changed = {}
+        for _, file in ipairs(changed_files()) do
+          changed[file] = true
+        end
+
         require("telescope.builtin").live_grep({
           use_regex = false,
+          entry_maker = boosting_entry_maker(make_entry.gen_from_vimgrep({
+            vimgrep_arguments = conf.vimgrep_arguments,
+          }), changed),
         })
       end,
       desc = "Live exact search",
