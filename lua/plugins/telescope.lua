@@ -2,7 +2,10 @@ local ignore_globs = { ".git", "node_modules", "dist", "build" }
 
 -- Files with uncommitted changes, relative to the current working directory.
 local function changed_files()
-  local out = vim.fn.systemlist({ "git", "-c", "core.quotepath=off", "status", "--porcelain" })
+  -- --untracked-files=all expands new directories into their individual
+  -- files, instead of collapsing them into one directory entry.
+  local out =
+    vim.fn.systemlist({ "git", "-c", "core.quotepath=off", "status", "--porcelain", "--untracked-files=all" })
   if vim.v.shell_error ~= 0 then
     return {}
   end
@@ -74,7 +77,8 @@ local function find_files()
 
   local changed, results, seen = {}, {}, {}
   for _, file in ipairs(changed_files()) do
-    if vim.uv.fs_stat(file) and not seen[file] then
+    local stat = vim.uv.fs_stat(file)
+    if stat and stat.type == "file" and not seen[file] then
       seen[file] = true
       changed[file] = true
       table.insert(results, file)
