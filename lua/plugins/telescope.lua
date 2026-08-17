@@ -1,5 +1,25 @@
 local ignore_globs = { ".git", "node_modules", "dist", "build" }
 
+-- Show the previewed file's path alongside the preview, since the dropdown
+-- theme's border doesn't render Telescope's built-in preview title. The
+-- preview window is a `style = "minimal"` float, which never shows a
+-- statusline unless 'laststatus' is 3, so a winbar is the reliable spot.
+vim.api.nvim_create_autocmd("User", {
+  pattern = "TelescopePreviewerLoaded",
+  group = vim.api.nvim_create_augroup("TelescopePreviewFilename", { clear = true }),
+  callback = function(args)
+    local bufname = args.data and args.data.bufname
+    if not bufname or bufname == "" then
+      return
+    end
+    local win = vim.fn.bufwinid(args.buf)
+    if win == -1 then
+      return
+    end
+    vim.wo[win].winbar = "%=" .. vim.fn.fnamemodify(bufname, ":.") .. "%="
+  end,
+})
+
 -- Files with uncommitted changes, relative to the current working directory.
 local function changed_files()
   -- --untracked-files=all expands new directories into their individual
