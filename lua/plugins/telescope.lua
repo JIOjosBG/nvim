@@ -76,6 +76,36 @@ local function boosting_entry_maker(make, changed)
   end
 end
 
+-- Sorter for live_grep: never filters (rg already filtered the results by
+-- the prompt), and keeps a fuzzy highlighter, but leaves the actual ordering
+-- to `tiebreak` below by giving every entry the same (sub-1) score.
+local function grep_sorter()
+  local fzy = require("telescope.algos.fzy")
+  return require("telescope.sorters").Sorter:new({
+    scoring_function = function()
+      return 0
+    end,
+    highlighter = function(_, prompt, display)
+      return fzy.positions(prompt, display)
+    end,
+  })
+end
+
+-- Order live_grep results by file name, then line number, with files that
+-- have uncommitted changes sorted first.
+local function grep_tiebreak(changed)
+  return function(a, b)
+    local a_changed, b_changed = changed[a.filename] or false, changed[b.filename] or false
+    if a_changed ~= b_changed then
+      return a_changed
+    end
+    if a.filename ~= b.filename then
+      return a.filename < b.filename
+    end
+    return (a.lnum or 0) < (b.lnum or 0)
+  end
+end
+
 -- Wrap the default file sorter so changed files keep winning while typing.
 local function boosting_sorter(changed)
   local sorter = require("telescope.config").values.file_sorter({})
@@ -170,6 +200,8 @@ return {
           entry_maker = boosting_entry_maker(make_entry.gen_from_vimgrep({
             vimgrep_arguments = conf.vimgrep_arguments,
           }), changed),
+          sorter = grep_sorter(),
+          tiebreak = grep_tiebreak(changed),
         })
       end,
       desc = "Live exact search",
