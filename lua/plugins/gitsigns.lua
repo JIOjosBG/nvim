@@ -33,6 +33,32 @@ return {
 			return "GitHeat7"
 		end
 
+		-- Diff view against HEAD: show the uncommitted changes of the current file
+		local function diff_win_open()
+			for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+				local buf = vim.api.nvim_win_get_buf(win)
+				if vim.api.nvim_buf_get_name(buf):match("^gitsigns://") then
+					return win
+				end
+			end
+			return nil
+		end
+
+		local function toggle_diff()
+			local win = diff_win_open()
+			if win then
+				vim.api.nvim_win_close(win, true)
+				-- leave the file window in a clean, non-diff state
+				for _, w in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+					vim.api.nvim_win_call(w, function()
+						if vim.wo.diff then vim.cmd("diffoff") end
+					end)
+				end
+				return
+			end
+			require("gitsigns").diffthis()
+		end
+
 		local heatmap_ns = vim.api.nvim_create_namespace("git_heatmap")
 		local heatmap_active = {}
 
@@ -81,6 +107,10 @@ return {
 		end
 
 		require("gitsigns").setup({
+			watch_gitdir = {
+				interval = 5000,
+				follow_files = true,
+			},
 			signs = {
 				add          = { text = "▎+" },
 				change       = { text = "▎~" },
@@ -109,6 +139,16 @@ return {
 					{ buffer = bufnr, desc = "Toggle git blame" })
 				vim.keymap.set("n", "<leader>gh", function() toggle_heatmap(bufnr) end,
 					{ buffer = bufnr, desc = "Toggle git heatmap" })
+				vim.keymap.set("n", "<leader>gv", toggle_diff,
+					{ buffer = bufnr, desc = "Toggle diff vs HEAD (split)" })
+				vim.keymap.set("n", "<leader>gi", require("gitsigns").preview_hunk_inline,
+					{ buffer = bufnr, desc = "Preview hunk inline" })
+				vim.keymap.set("n", "<leader>gp", require("gitsigns").preview_hunk,
+					{ buffer = bufnr, desc = "Preview hunk in float" })
+				vim.keymap.set("n", "]h", function() require("gitsigns").nav_hunk("next") end,
+					{ buffer = bufnr, desc = "Next hunk" })
+				vim.keymap.set("n", "[h", function() require("gitsigns").nav_hunk("prev") end,
+					{ buffer = bufnr, desc = "Previous hunk" })
 				toggle_heatmap(bufnr)
 			end,
 		})
