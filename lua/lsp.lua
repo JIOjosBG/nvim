@@ -3,10 +3,9 @@ vim.lsp.config("lua_ls", {
 	filetypes = { "lua" },
 	root_markers = { ".luarc.json", ".git" },
 	settings = {
-		Lua = { diagnostics = { globals = { "vim" } } }
+		Lua = { diagnostics = { globals = { "vim" } } },
 	},
 })
-
 
 vim.lsp.config("vtsls", {
 	cmd = { "vtsls", "--stdio" },
@@ -70,6 +69,26 @@ vim.lsp.config("clangd", {
 	root_markers = { "compile_commands.json", "compile_flags.txt", ".git" },
 })
 
+vim.lsp.config("rust_analyzer", {
+	cmd = { "rust-analyzer" },
+	filetypes = { "rust" },
+	-- Use the nearest Cargo.toml, so a Rust folder inside a JS project gets its own root.
+	root_dir = function(bufnr, on_dir)
+		local file = vim.api.nvim_buf_get_name(bufnr)
+		local root = vim.fs.root(file, { "Cargo.toml", "rust-project.json" })
+		if root then
+			on_dir(root)
+		end
+	end,
+	settings = {
+		["rust-analyzer"] = {
+			cargo = { allFeatures = true },
+			check = { command = "clippy" },
+		},
+	},
+})
+
+vim.lsp.enable("rust_analyzer")
 vim.lsp.enable("clangd")
 vim.lsp.enable("dartls")
 vim.lsp.enable("vtsls")
