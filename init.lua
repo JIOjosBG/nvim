@@ -4,8 +4,7 @@ vim.g.loaded_netrwPlugin = 1
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
-
-vim.env.PATH = vim.env.PATH .. ":/home/user/.npm-global/bin" -- for relayer
+-- vim.env.PATH = vim.env.PATH .. ":/home/jo/.npm-global/bin" -- for relayer
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 if not vim.loop.fs_stat(lazypath) then
@@ -23,8 +22,11 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup("plugins")
 
-
 vim.opt.clipboard = "unnamedplus"
+
+-- no swap files: unsaved edits are not recoverable after a crash,
+-- but old swap copies can no longer be loaded by mistake
+vim.opt.swapfile = false
 
 vim.opt.autoread = true
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
