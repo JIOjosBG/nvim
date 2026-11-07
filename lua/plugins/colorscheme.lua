@@ -22,6 +22,10 @@ return {
 				set(0, "@lsp.type.selfTypeKeyword.rust", { fg = "#f7768e", italic = true })
 				set(0, "@lsp.type.typeAlias.rust", { fg = "#2ac3de" })
 				set(0, "@lsp.type.enumMember.rust", { fg = "#ff9e64" })
+
+				-- Bracket under the cursor: use a background so it never looks
+				-- like a rainbow-delimiters color (they only change the text color).
+				set(0, "MatchParen", { fg = "#ffffff", bg = "#3d59a1", bold = true })
 			end
 
 			set_rust_hl()
